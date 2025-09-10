@@ -1,0 +1,65 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1.0.0-posts-1" author="${author}">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="posts" />
+            </not>
+        </preConditions>
+        <createTable tableName="posts">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(300)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="text" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="tags" type="varchar[]" >
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="int" >
+                <constraints nullable="false"
+                             foreignKeyName="posts_users_id_fk"
+                             referencedTableName="users"
+                             referencedColumnNames="id" />
+            </column>
+            <column name="created_at" type="timestamp with time zone" >
+                <constraints nullable="false" />
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.0-posts-2" author="${author}">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="posts" indexName="posts_content_ix" />
+            </not>
+        </preConditions>
+        <sql>
+            create index posts_content_ix on posts using gin(to_tsvector('russian', content))
+        </sql>
+    </changeSet>
+
+    <changeSet id="1.0.0-posts-3" author="${author}">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="posts" indexName="posts_tags_ix" />
+            </not>
+        </preConditions>
+        <sql>
+            create index posts_tags_ix on posts using GIN(tags)
+        </sql>
+    </changeSet>
+
+    <changeSet id="1.0.0-posts-4" author="${author}">
+        <sqlFile path="posts_trigger.sql" splitStatements="false" relativeToChangelogFile="true"/>
+    </changeSet>
+
+</databaseChangeLog>

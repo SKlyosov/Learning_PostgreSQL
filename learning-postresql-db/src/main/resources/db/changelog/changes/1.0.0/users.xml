@@ -1,0 +1,26 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1.0.0-users-1" author="${author}">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users" />
+            </not>
+        </preConditions>
+        <createTable tableName="users">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="name" type="varchar(150)" >
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="email" type="varchar(150)" >
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

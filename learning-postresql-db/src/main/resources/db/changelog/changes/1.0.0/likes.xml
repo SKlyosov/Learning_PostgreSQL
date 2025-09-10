@@ -1,0 +1,41 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1.0.0-likes-1" author="${author}">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="likes" />
+            </not>
+        </preConditions>
+        <createTable tableName="likes">
+            <column name="post_id" type="int" >
+                <constraints nullable="false"
+                             foreignKeyName="likes_posts_fk"
+                             referencedTableName="posts"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="user_id" type="int" >
+                <constraints nullable="false"
+                             foreignKeyName="likes_users_fk"
+                             referencedTableName="users"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="emotion" type="varchar(7)" >
+                <constraints nullable="false" checkConstraint="check (emotion in ('LIKE', 'DISLIKE'))"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.0-likes-2" author="${author}">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <primaryKeyExists tableName="likes" />
+            </not>
+        </preConditions>
+        <addPrimaryKey tableName="likes" columnNames="post_id,user_id" />
+    </changeSet>
+
+</databaseChangeLog>

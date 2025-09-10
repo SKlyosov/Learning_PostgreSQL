@@ -1,0 +1,7 @@
+DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+HIBERNATE_DIALECT: org.hibernate.dialect.H2Dialect
+APP_LOGGGING_LEVEL:INFO: DEBUG
+
+spring:
+  jpa.show-sql: true
+  kafka.listener.auto-startup: false

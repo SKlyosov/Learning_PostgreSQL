@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/learning
+    username: postgres
+    password: postgres
+    hikari:
+      maximum-pool-size: ${HIKARI_MAXIMUM_POOL_SIZE:5}
+      max-lifetime: ${HIKARI_MAX_LIFETIME:600000}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+    open-in-view: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  kafka.listener.auto-startup: false
+  jms.listener.auto-startup: false
+
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+    disable-swagger-default-url: true
+    use-root-path: true
+    path: /swagger-ui.html
+    url: /v3/api-docs
+  show-actuator: false
+
+logging:
+  level:
+    ru.sklyosov: ${APP_LOGGGING_LEVEL:INFO}
+    org:
+      hibernate:
+        SQL: DEBUG
+        type: TRACE
+        orm.jdbc.bind: trace

@@ -1,0 +1,51 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="1.0.0-comments-1" author="${author}">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comments" />
+            </not>
+        </preConditions>
+        <createTable tableName="comments">
+            <column name="id" type="serial" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="post_id" type="int" >
+                <constraints nullable="false"
+                             foreignKeyName="comments_posts_fk"
+                             referencedTableName="posts"
+                             referencedColumnNames="id"
+                             deleteCascade="true"/>
+            </column>
+            <column name="user_id" type="int" >
+                <constraints nullable="false"
+                             foreignKeyName="comments_users_fk"
+                             referencedTableName="users"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="created_at" type="timestamp with time zone" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="text" >
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.0-comments-2" author="${author}">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="comments" indexName="comments_content_ix" />
+            </not>
+        </preConditions>
+        <sql>
+            create index comments_content_ix on comments using gin(to_tsvector('russian', content))
+        </sql>
+    </changeSet>
+
+
+</databaseChangeLog>

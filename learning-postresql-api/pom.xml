@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ru.sklyosov</groupId>
+        <artifactId>learning-postresql</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>learning-postresql-api</artifactId>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-openapi</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generatorName>spring</generatorName>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <inputSpecRootDirectory>${project.basedir}/src/main/resources</inputSpecRootDirectory>
+                            <inputSpec>learning-postresql-api-v1.0.yaml</inputSpec>
+                            <configOptions>
+                                <useTags>true</useTags>
+                                <interfaceOnly>true</interfaceOnly>
+                                <apiPackage>ru.sklyosov.learning.postresql.api</apiPackage>
+                                <modelPackage>ru.sklyosov.learning.postresql.model</modelPackage>
+                                <serializableModel>true</serializableModel>
+                                <generateBuilders>true</generateBuilders>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <artifactVersion>${revision}</artifactVersion>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateModelTests>false</generateModelTests>
+                            <typeMappings>
+                                <typeMapping>local-date-time=LocalDateTime</typeMapping>
+                                <typeMapping>instant=Instant</typeMapping>
+                                <typeMapping>big-decimal=BigDecimal</typeMapping>
+                                <typeMapping>pageable=Pageable</typeMapping>
+                            </typeMappings>
+                            <importMappings>
+                                <importMapping>LocalDateTime=java.time.LocalDateTime</importMapping>
+                                <importMapping>Instant=java.time.Instant</importMapping>
+                                <importMapping>BigDecimal=java.math.BigDecimal</importMapping>
+                                <importMapping>Pageable=org.springframework.data.domain.Pageable</importMapping>
+                            </importMappings>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

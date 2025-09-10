@@ -1,0 +1,393 @@
+openapi: 3.0.0
+info:
+  title: learning-postgresql
+  version: 1.0.0
+  contact:
+    name: Sergey Klyosov
+paths:
+  /comments:
+    get:
+      summary: Получение комментариев к посту
+      operationId: getComments
+      parameters:
+        - name: postId
+          in: query
+          required: true
+          description: Идентификатор поста
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentDto'
+      tags:
+        - comments
+    post:
+      summary: Добавление комментария к посту
+      operationId: createComment
+      parameters:
+        - name: user
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/CommentDto'
+      tags:
+        - comments
+
+    delete:
+      summary: Удаление комментария
+      operationId: deleteComment
+      parameters:
+        - name: user
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: query
+          required: true
+          description: Идентификатор комментария
+          schema:
+            type: integer
+            nullable: false
+      responses:
+        '200':
+          description: OK
+      tags:
+        - comments
+
+  /likes:
+    get:
+      summary: Получение списка лайков
+      operationId: getLikes
+      parameters:
+        - name: postId
+          in: query
+          required: true
+          description: Идентификатор поста
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LikeDto'
+      tags:
+        - likes
+    post:
+      summary: Добавление лайка
+      operationId: createLike
+      parameters:
+        - name: user
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LikeDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikeDto'
+      tags:
+        - likes
+    delete:
+      summary: Удаление лайка
+      operationId: deleteLike
+      parameters:
+        - name: user
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LikeDto'
+      responses:
+        '200':
+          description: OK
+      tags:
+        - likes
+
+  /users:
+    get:
+      summary: Получение данных пользователя
+      operationId: getUser
+      parameters:
+        - name: userName
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+      tags:
+        - users
+    post:
+      summary: Добавление пользователя
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+      tags:
+        - users
+    delete:
+      summary: Удаление пользователя
+      operationId: deleteLUser
+      parameters:
+       - name: userName
+         in: query
+         required: true
+         schema:
+           type: string
+      responses:
+        '200':
+          description: OK
+      tags:
+        - users
+
+  /posts:
+    get:
+      summary: Получение данных постов
+      operationId: getPosts
+      parameters:
+        - name: userName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: searchWord
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: tag
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostDto'
+      tags:
+        - posts
+    post:
+      summary: Создание поста
+      operationId: createPost
+      parameters:
+        - name: user
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostDto'
+      tags:
+        - posts
+    delete:
+      summary: Удаление поста
+      operationId: deletePost
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: OK
+      tags:
+        - posts
+
+  /audit:
+    get:
+      summary: Получение данных аудита
+      operationId: getPostsAudit
+      parameters:
+        - name: postId
+          in: query
+          required: true
+          schema:
+            type: integer
+            nullable: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostAuditDto'
+      tags:
+        - audit
+
+components:
+  schemas:
+    CommentDto:
+      title: CommentDto
+      type: object
+      description: Модель объекта Комментарий
+      properties:
+        id:
+          type: integer
+        user:
+          type: string
+          description: Автор поста
+        postId:
+          type: integer
+          description: Идентификатор поста
+        content:
+          type: string
+          description: Содержимое комментария
+        createdAt:
+          type: string
+          format: 'date-time'
+    EmotionEnum:
+      type: string
+      title: EmotionEnum
+      description: Вид эмоции
+      nullable: false
+      enum:
+        - LIKE
+        - DISLIKE
+    LikeDto:
+      title: LikeDto
+      type: object
+      properties:
+        postId:
+          type: integer
+          nullable: false
+        userName:
+          type: string
+          nullable: false
+        emotion:
+          $ref: "#/components/schemas/EmotionEnum"
+
+    UserDto:
+      title: UserDto
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+    PostDto:
+      title: PostDto
+      type: object
+      properties:
+        id:
+          type: integer
+        userName:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: 'date-time'
+        tags:
+          type: array
+          items:
+            type: string
+
+    OperationEnum:
+      type: string
+      title: EmotionEnum
+      description: Вид эмоции
+      nullable: false
+      enum:
+        - DELETE
+        - UPDATE
+    PostAuditDto:
+      title: PostAuditDto
+      type: object
+      properties:
+        id:
+          type: integer
+        postId:
+          type: integer
+        newTitle:
+          type: string
+        oldTitle:
+          type: string
+        operation:
+          $ref: "#/components/schemas/OperationEnum"
+        processedAt:
+          type: string
+          format: 'date-time'
